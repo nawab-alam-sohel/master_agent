@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Blog / News{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/blog_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container page-hero">
+  <h1 class="page-title">Blog</h1>
+  <p class="page-date">{% now "F d, Y - h:i A" %}</p>
+</div>
+
+<div class="container content-wrapper">
+
+  <!-- LEFT: Blog posts -->
+  <div class="left-content">
+    {% for post in posts %}
+      <article class="post-card">
+        <a href="{% url 'post_detail' slug=post.slug %}">
+          {% if post.image %}
+            <div class="post-thumb">
+              <img src="{{ post.image.url }}" alt="{{ post.title }}">
+            </div>
+          {% endif %}
+        </a>
+
+        <div class="post-body">
+          <h2 class="post-title">
+            <a href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a>
+          </h2>
+
+          <div class="post-meta">
+            <span class="post-date">{{ post.created_at|date:"M d, Y" }}</span>
+            {% if post.category %}
+              <span class="post-cat">• {{ post.category.name }}</span>
+            {% endif %}
+          </div>
+
+          <p class="post-excerpt">{{ post.content|striptags|truncatechars:220 }}</p>
+          <a class="read-more" href="{% url 'post_detail' slug=post.slug %}">Read More »</a>
+        </div>
+      </article>
+    {% empty %}
+      <p>No posts found.</p>
+    {% endfor %}
+
+    <!-- Pagination -->
+    {% if posts.paginator.num_pages > 1 %}
+    <div class="pagination">
+      {% if posts.has_previous %}
+        <a href="?page={{ posts.previous_page_number }}" class="page-link">« Prev</a>
+      {% endif %}
+
+      {% for num in posts.paginator.page_range %}
+        {% if posts.number == num %}
+          <span class="page-number current">{{ num }}</span>
+        {% elif num > posts.number|add:-3 and num < posts.number|add:3 %}
+          <a href="?page={{ num }}" class="page-number">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if posts.has_next %}
+        <a href="?page={{ posts.next_page_number }}" class="page-link">Next »</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- RIGHT: Sidebar -->
+  <aside class="right-sidebar">
+
+    <!-- Search -->
+    <div class="sidebar-block">
+      <h3>Search</h3>
+      <form method="GET" action="{% url 'blog_list' %}" class="sidebar-search-form">
+        <input type="text" name="q" placeholder="Search..." value="{{ search_query }}">
+        <button type="submit">Go</button>
+      </form>
+    </div>
+
+    <!-- Recent Posts -->
+    <div class="sidebar-block">
+      <h3>Recent Posts</h3>
+      <div class="recent-posts">
+        <ul>
+          {% for rp in recent_posts %}
+          <li>
+            {% if rp.image %}
+              <img class="recent-thumb" src="{{ rp.image.url }}" alt="{{ rp.title }}">
+            {% endif %}
+            <a class="recent-title" href="{% url 'post_detail' slug=rp.slug %}">
+              {{ rp.title|truncatewords:8 }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="sidebar-block">
+      <h3>Categories</h3>
+      <div class="categories">
+        <ul>
+          {% for cat in categories %}
+          <li>
+            <a href="{% url 'category_posts' slug=cat.slug %}"
+               class="{% if current_category == cat.slug %}active-cat{% endif %}">
+              {{ cat.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+{% endblock %}

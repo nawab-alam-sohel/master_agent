@@ -1,0 +1,73 @@
+/* Post Detail Page Styling */
+
+.post-detail-thumb img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.post-category {
+  margin-bottom: 12px;
+  color: #bdbdbd;
+  font-size: 14px;
+}
+
+.post-category a {
+  color: #ffc107;
+  text-decoration: none;
+}
+
+.post-category a:hover {
+  text-decoration: underline;
+}
+
+.post-full-content {
+  color: #ddd;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.post-full-content h2,
+.post-full-content h3 {
+  color: #fff;
+  margin-top: 25px;
+}
+
+.post-full-content p {
+  margin-bottom: 15px;
+}
+
+.post-full-content img {
+  max-width: 100%;
+  display: block;
+  margin: 15px auto;
+  border-radius: 4px;
+}
+
+.post-full-content a {
+  color: #ffc107;
+  text-decoration: underline;
+}
+
+.post-full-content blockquote {
+  margin: 20px 0;
+  padding: 12px 18px;
+  border-left: 4px solid #ffc107;
+  background: #222;
+  color: #ddd;
+  font-style: italic;
+}
+
+.post-full-content ul,
+.post-full-content ol {
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+@media screen and (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Master Agent List{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/agents_table.css' %}">
+<link rel="stylesheet" href="{% static 'css/velki_header_footer.css' %}">
+
+<style>
+  .content-wrapper { display: flex; gap: 25px; margin-top: 30px; }
+  .left-content { flex: 3; }
+  .right-sidebar { flex: 1; background: #222; padding: 15px; border-radius: 5px; }
+  .right-sidebar h3 { color: #ffc107; border-bottom: 1px solid #444; padding-bottom: 5px; }
+  .sidebar-block { margin-bottom: 20px; }
+  .sidebar-block ul { padding: 0; margin: 0; list-style: none; }
+  .sidebar-block li { margin-bottom: 10px; }
+  .sidebar-block a { color: #fff; text-decoration: none; }
+  .sidebar-search-form { display: flex; gap: 10px; margin-top: 10px; }
+  .sidebar-search-form input { flex: 1; padding: 5px; }
+  .sidebar-search-form button { background: #ffc107; border: none; padding: 6px 10px; cursor: pointer; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <h1 class="page-title">Master Agent List</h1>
+    <p class="page-date">{% now "F d, Y - h:i A" %}</p>
+  </div>
+</div>
+
+<div class="search-wrapper">
+  <div class="search-box">
+    <h3 class="search-heading">এজেন্ট এর আইডি নাম্বার দিয়ে খুঁজুন:</h3>
+    <form method="get" class="search-form" action="{% url 'agents_page' %}">
+      <div class="form-row">
+        <label>Agent Type:</label>
+        <select name="type">
+          <option value="">All</option>
+          <option value="মাষ্টার এজেন্ট">মাষ্টার এজেন্ট</option>
+          <option value="সুপার এজেন্ট">সুপার এজেন্ট</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Agent ID:</label>
+        <input type="text" name="agent_id">
+      </div>
+      <div class="form-buttons">
+        <button type="submit" class="btn-submit">Submit</button>
+        <a href="{% url 'agents_page' %}" class="btn-reset">Reset</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="container">
+  <div class="notice-block">
+    <p>এজেন্ট দের সাথে লেনদেন এর আগে WINPBU এর নিয়ম গুলো জেনে নিন!!</p>
+  </div>
+</div>
+
+<div class="content-wrapper">
+  <div class="left-content">
+    <div class="table-panel">
+      <table class="agents-table">
+        <thead>
+          <tr>
+            <th>ID NO</th>
+            <th>TYPE</th>
+            <th>SITE</th>
+            <th>PHONE NUMBER</th>
+            <th>COMPLAIN</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for a in agents %}
+          <tr>
+            <td><a href="{{ a.whatsapp_link }}" target="_blank">{{ a.display_id }}</a></td>
+            <td><a href="{{ a.whatsapp_link }}" target="_blank">{{ a.type_label }}</a></td>
+            <td><a href="{{ a.whatsapp_link }}" target="_blank">{{ a.site_text|linebreaksbr }}</a></td>
+            <td><a href="{{ a.whatsapp_link }}" target="_blank">{{ a.phone_display }}</a></td>
+            <td><a href="{{ a.whatsapp_link }}" target="_blank">অভিযোগ</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ SIDEBAR -->
+  <aside class="right-sidebar">
+
+    <div class="sidebar-block">
+      <h3>Search</h3>
+      <form method="get" action="{% url 'blog_list' %}" class="sidebar-search-form">
+        <input type="text" name="q" placeholder="Search blog...">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="sidebar-block">
+      <h3>Categories</h3>
+      <ul>
+        {% for cat in categories %}
+          <li><a href="{% url 'category_posts' slug=cat.slug %}">{{ cat.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="sidebar-block">
+  <h3>Recent Posts</h3>
+  <ul class="recent-list">
+    {% for post in recent_posts %}
+      <li class="recent-item">
+        <a href="{% url 'post_detail' slug=post.slug %}">
+          {% if post.image %}
+            <img src="{{ post.image.url }}" class="recent-thumb" alt="{{ post.title }}">
+          {% endif %}
+          <span class="recent-title">{{ post.title|truncatechars:40 }}</span>
+        </a>
+      </li>
+    {% empty %}
+      <li>No posts available</li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+  </aside>
+</div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/blog_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container page-hero">
+  <h1 class="page-title">{{ post.title }}</h1>
+  <p class="page-date">{{ post.created_at|date:"F d, Y - h:i A" }}</p>
+</div>
+
+<div class="container content-wrapper">
+
+  <!-- LEFT: Main article -->
+  <div class="left-content">
+
+    {% if post.image %}
+    <div class="post-detail-thumb">
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width:100%; border-radius:6px; margin-bottom:20px;">
+    </div>
+    {% endif %}
+
+    <div class="post-detail-content">
+      <p class="post-category">
+        <strong>Category:</strong>
+        <a href="{% url 'category_posts' slug=post.category.slug %}">{{ post.category.name }}</a>
+      </p>
+      <div class="post-full-content">
+        {{ post.content|safe }}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Sidebar -->
+  <aside class="right-sidebar">
+
+    <!-- Search -->
+    <div class="sidebar-block">
+      <h3>Search</h3>
+      <form method="GET" action="{% url 'blog_list' %}" class="sidebar-search-form">
+        <input type="text" name="q" placeholder="Search posts...">
+        <button type="submit">Go</button>
+      </form>
+    </div>
+
+    <!-- Recent Posts -->
+    <div class="sidebar-block">
+      <h3>Recent Posts</h3>
+      <div class="recent-posts">
+        <ul>
+          {% for rp in recent_posts %}
+          <li>
+            {% if rp.image %}
+              <img class="recent-thumb" src="{{ rp.image.url }}" alt="{{ rp.title }}">
+            {% endif %}
+            <a class="recent-title" href="{% url 'post_detail' slug=rp.slug %}">
+              {{ rp.title|truncatewords:8 }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="sidebar-block">
+      <h3>Categories</h3>
+      <div class="categories">
+        <ul>
+          {% for cat in categories %}
+          <li>
+            <a href="{% url 'category_posts' slug=cat.slug %}">{{ cat.name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+{% endblock %}

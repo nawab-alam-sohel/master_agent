@@ -1,0 +1,20 @@
+{# templates/includes/footer.html #}
+{% load static %}
+<footer class="velki-footer">
+  <div class="velki-footer-inner">
+    <div class="footer-left">
+      <img src="{% static 'images/logo-dummy.png' %}" alt="VelkiBaaji" class="footer-logo">
+      <p class="foot-desc">© {% now "Y" %} Velkibaji. All rights reserved.</p>
+    </div>
+
+    <div class="footer-right">
+      <div class="footer-links">
+        <a href="{% url 'about' %}">About</a> |
+        <a href="{% url 'contact' %}">Contact</a> |
+        <a href="{% url 'privacy_policy' %}">Privacy Policy</a> |
+        <a href="{% url 'terms' %}">Terms & Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+

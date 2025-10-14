@@ -1,0 +1,113 @@
+{% load static %}
+
+<!-- ✅ Top Trending Bar -->
+<div class="top-bar">
+    <span>🔥 Trending</span>
+</div>
+
+<!-- ✅ Header with Logo + Mobile Menu Button -->
+<header class="main-header">
+    <div class="logo">
+        <img src="{% static 'images/logo-dummy.png' %}" alt="Logo">
+    </div>
+    <!-- ✅ Mobile Menu Button -->
+    <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+</header>
+
+<!-- ✅ Navigation Menu -->
+<nav class="navbar" id="mobileMenu">
+  <ul class="nav-list">
+    <li class="nav-item"><a href="{% url 'home'%}">হোম পেইজ</a></li>
+
+    <li class="nav-item dropdown">
+      <a href="#" onclick="toggleDropdown(event)">প্রশ্ন উত্তর ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="#">সাধারণ প্রশ্ন</a></li>
+        <li><a href="#">গাইডলাইন</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item dropdown">
+      <a href="#" onclick="toggleDropdown(event)">এজেন্ট কে খুঁজুন ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="#">ঢাকা</a></li>
+        <li><a href="#">চট্টগ্রাম</a></li>
+        <li><a href="#">রাজশাহী</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item dropdown">
+      <a href="#" onclick="toggleDropdown(event)">এজেন্ট লিস্ট ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="{% url 'home'%}">মাস্টার এজেন্ট লিস্ট</a></li>
+        <li><a href="{% url 'agents_page'%}">সুপার এজেন্ট লিস্ট</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item"><a href="#">কাস্টমার সার্ভিস</a></li>
+  </ul>
+</nav>
+
+<!-- ✅ Breaking News Bar -->
+<div class="breaking-bar">
+    <div class="breaking-title">Breaking News</div>
+    <marquee>winpibn.com একটি অফিশিয়াল এজেন্ট তালিকা প্রদান করে। আমরা জুয়া সংক্রান্ত কোনো সেবা দেই না। আরও জানুন…</marquee>
+</div>
+
+<!-- ✅ CSS -->
+<style>
+  .mobile-menu-btn {
+      display: none;
+      font-size: 26px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+      .navbar {
+          display: none;
+          background: #111;
+          position: absolute;
+          top: 80px;
+          left: 0;
+          width: 100%;
+          padding: 10px;
+          z-index: 999;
+      }
+
+      .navbar.active {
+          display: block;
+      }
+
+      .mobile-menu-btn {
+          display: block;
+      }
+
+      .nav-list {
+          flex-direction: column;
+      }
+
+      .dropdown-menu {
+          display: none;
+          background: #222;
+      }
+
+      .dropdown-menu.active {
+          display: block;
+      }
+  }
+</style>
+
+<!-- ✅ JavaScript -->
+<script>
+  function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('active');
+  }
+
+  function toggleDropdown(event) {
+      event.preventDefault();
+      event.target.nextElementSibling.classList.toggle('active');
+  }
+</script>

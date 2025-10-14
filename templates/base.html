@@ -1,0 +1,75 @@
+{# templates/base.html #}
+{% load static %}
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Velkibaji{% endblock %}</title>
+
+  <!-- main CSS: header/footer + agents_table.css (merge if needed) -->
+  <link rel="stylesheet" href="{% static 'css/velki_header_footer.css' %}">
+  <link rel="stylesheet" href="{% static 'css/agents_table.css' %}">
+  <link rel="stylesheet" href="{% static 'css/search_box.css' %}">
+  <link rel="stylesheet" href="{% static 'css/velki_header_footer.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/blog_list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/post_detail.css' %}">
+
+
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  {% include "includes/header.html" %}
+
+  <main id="main" class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "includes/footer.html" %}
+
+  <script>
+    // Optionally set global fallback WA number (digits only)
+    window.VELKI_GLOBAL_WHATSAPP = "85515519825";
+  </script>
+
+  <script src="{% static 'js/velki_header.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dropdowns = document.querySelectorAll(".dropdown");
+
+    dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector("a");
+        const menu = dropdown.querySelector(".dropdown-menu");
+
+        // Toggle dropdown on click (for mobile)
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            // Close other dropdowns
+            dropdowns.forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove("open");
+                }
+            });
+
+            // Toggle current dropdown
+            dropdown.classList.toggle("open");
+        });
+    });
+
+    // Close dropdown if click outside
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".dropdown")) {
+            dropdowns.forEach(dropdown => dropdown.classList.remove("open"));
+        }
+    });
+});
+</script>
+
+
+</body>
+</html>
