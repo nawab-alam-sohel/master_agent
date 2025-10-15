@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: master-agent-6gg7
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn agentsite.wsgi:application
+    postDeployCommand: |
+      python manage.py migrate --noinput
+      python manage.py loaddata data.json
