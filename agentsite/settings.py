@@ -32,9 +32,20 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    ".onrender.com",  # Keep this for render
+    "master-agent-6gg7.onrender.com",
+    "winpibn.com",
+    "www.winpibn.com",
 ]
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://master-agent-6gg7.onrender.com",
+    "https://winpibn.com",
+    "https://www.winpibn.com",
+]
+
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
