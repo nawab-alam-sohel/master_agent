@@ -1,1 +1,1 @@
-web: gunicorn agentsite.wsgi.application
+web: gunicorn agentsite.wsgi
