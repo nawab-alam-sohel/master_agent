@@ -1,6 +1,11 @@
-django
+Django==5.0.3
 gunicorn
-whitenoise
 dj-database-url
 psycopg2-binary
+python-dotenv
+whitenoise
+cloudinary
+django-cloudinary-storage
+django-cors-headers
+djangorestframework
 Pillow
