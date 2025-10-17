@@ -2,52 +2,47 @@ name: Render PostgreSQL Backup to Google Drive
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # Runs daily at midnight UTC
-  workflow_dispatch:       # Allows manual run
+    - cron: "0 0 * * *"  # runs every day at 00:00 UTC
+  workflow_dispatch:      # manual trigger
 
 jobs:
   backup:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: Install PostgreSQL 17 client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget gnupg lsb-release
-          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-          sudo apt-get update
-          sudo apt-get -y install postgresql-client-17
-          echo "✅ Installed PostgreSQL client version:"
-          /usr/lib/postgresql/17/bin/pg_dump --version
-
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           pip install cryptography google-api-python-client google-auth-httplib2 google-auth-oauthlib
 
-      - name: Save Google Service Account Credentials
+      - name: Prepare Google Credentials
         run: echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > service_account.json
 
-      - name: Dump PostgreSQL Database
+      - name: Backup PostgreSQL -> db.dump
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          echo "✅ Starting PostgreSQL backup..."
-          /usr/lib/postgresql/17/bin/pg_dump "$DATABASE_URL" --format=custom --file=db.dump
-          echo "✅ pg_dump finished successfully."
+          pg_dump "$DATABASE_URL" --format=custom --file=db.dump
 
-      - name: Encrypt & Upload Backup to Google Drive
+      - name: Encrypt + Upload to Google Drive
         env:
           GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
           BACKUP_PASSWORD: ${{ secrets.BACKUP_PASSWORD }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: |
           python3 backup/encrypt_and_upload.py
-          echo "✅ Backup encrypted & uploaded successfully ✅"
+
+      - name: ✅ Done
+        run: echo "Backup completed successfully ✅"
