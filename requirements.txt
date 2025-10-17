@@ -9,10 +9,4 @@ django-cloudinary-storage
 django-cors-headers
 djangorestframework
 Pillow
-google-api-python-client
-google-auth-httplib2
-google-auth-oauthlib
-google-auth
-cryptography
-python-dotenv
 
