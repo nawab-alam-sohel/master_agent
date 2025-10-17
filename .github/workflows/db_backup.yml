@@ -1,0 +1,36 @@
+name: Render PostgreSQL Backup to Google Drive
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # Runs every day at 00:00 UTC
+  workflow_dispatch:       # Allows manual backup from GitHub
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install cryptography google-api-python-client google-auth-httplib2 google-auth-oauthlib
+
+      - name: Save Google Service Account JSON
+        run: echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}" > service_account.json
+
+      - name: Backup PostgreSQL
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+          BACKUP_PASSWORD: ${{ secrets.BACKUP_PASSWORD }}
+        run: |
+          pg_dump "$DATABASE_URL" --format=custom --file=db.dump
+          python3 backup/encrypt_and_upload.py
+
