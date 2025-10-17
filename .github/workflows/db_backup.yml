@@ -2,8 +2,8 @@ name: Render PostgreSQL Backup to Google Drive
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # Runs every day at 00:00 UTC
-  workflow_dispatch:       # Allows manual backup from GitHub
+    - cron: "0 0 * * *"  # daily backup
+  workflow_dispatch:     # manual trigger
 
 jobs:
   backup:
@@ -38,5 +38,5 @@ jobs:
           GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
           BACKUP_PASSWORD: ${{ secrets.BACKUP_PASSWORD }}
         run: |
-          pg_dump "$DATABASE_URL" --format=custom --file=db.dump
+          pg_dump17 "$DATABASE_URL" --format=custom --file=db.dump
           python3 backup/encrypt_and_upload.py
