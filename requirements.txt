@@ -9,4 +9,5 @@ django-cloudinary-storage
 django-cors-headers
 djangorestframework
 Pillow
-
+cryptography
+google-api-python-client
